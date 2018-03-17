@@ -1,6 +1,22 @@
 package com.java.crud.enums;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import jersey.repackaged.com.google.common.collect.Maps;
+
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.OBJECT;
+
+import java.util.Map;
+
+/**
+ * I tried to deserialize in many ways and didn't have success until now
+ * to finish at right time, I back to a simple String
+ */
+@JsonDeserialize(using = StatusEnumDeserializer.class)
+@JsonFormat(shape = OBJECT)
 public enum StatusEnum {
 
     DRAFT(0, "DRAFT"),
@@ -11,6 +27,13 @@ public enum StatusEnum {
     private Integer id;
     private String value;
 
+    private static final Map<Integer, StatusEnum> nameIndex = Maps.newHashMapWithExpectedSize(StatusEnum.values().length);
+
+    static {
+        for (StatusEnum status : StatusEnum.values()) {
+            nameIndex.put(status.getId(), status);
+        }
+    }
 
     StatusEnum(Integer id, String value) {
         this.id = id;
@@ -21,26 +44,12 @@ public enum StatusEnum {
         return id;
     }
 
+    @JsonProperty("value")
     public String getValue() {
         return value;
     }
 
-    public String getValue(Integer id) {
-        for (StatusEnum enums : StatusEnum.values()) {
-            if (enums.getId().equals(id)) {
-                return enums.getValue();
-            }
-        }
-        return null;
+    public static StatusEnum getStatusEnum(Integer id) {
+        return nameIndex.get(id);
     }
-
-    public static StatusEnum get(Integer id) {
-        for (StatusEnum gp : StatusEnum.values()) {
-            if (gp.getId().equals(id)) {
-                return gp;
-            }
-        }
-        return null;
-    }
-
 }

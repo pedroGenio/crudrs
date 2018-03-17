@@ -1,39 +1,23 @@
 package com.java.crud.model;
 
-import com.java.crud.enums.StatusEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.time.ZonedDateTime;
+public class Project extends Entity {
 
-public class Project {
-
-    private Long id;
-    private Long version;
+    private Long version = new Long(0);
     private String name;
     private String description;
-    private StatusEnum statusEnum;
-
-    private Long createdBy;
-    private Long updatedBy;
-    private ZonedDateTime createdAt;
-    private ZonedDateTime updatedAt;
-
-    public Project(Long id, String name, String description, StatusEnum statusEnum) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.statusEnum = statusEnum;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String status;
+//    @JsonDeserialize(using = StatusEnumDeserializer.class)
+//    private StatusEnum statusEnum;
 
     public Long getVersion() {
         return version;
+    }
+
+    @JsonIgnore
+    public Long getVersioning() {
+        return version++;
     }
 
     public void setVersion(Long version) {
@@ -56,43 +40,21 @@ public class Project {
         this.description = description;
     }
 
-    public StatusEnum getStatusEnum() {
-        return statusEnum;
+    public String getStatus() {
+        return status;
     }
 
-    public void setStatusEnum(StatusEnum statusEnum) {
-        this.statusEnum = statusEnum;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public Long getCreatedBy() {
-        return createdBy;
-    }
+    //    public StatusEnum getStatusEnum() {
+//        return statusEnum;
+//    }
+//
+//    public void setStatusEnum(StatusEnum statusEnum) {
+//        this.statusEnum = statusEnum;
+//    }
 
-    public void setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
-    }
 
-    public Long getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(Long updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public ZonedDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(ZonedDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 }
