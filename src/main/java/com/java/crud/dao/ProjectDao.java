@@ -76,7 +76,7 @@ public class ProjectDao extends BaseDao {
         PreparedStatement ps = getPreparedStatement(sql);
 
         try {
-            ps.setLong(1, ((Project) baseEntityOld).getVersioning());
+            ps.setLong(1, ((Project) baseEntityOld).getVersion() + 1);  // Version control, just one way to have this control
             ps.setString(2, ((Project) baseEntity).getName());
             ps.setString(3, ((Project) baseEntity).getDescription());
             ps.setString(4, ((Project) baseEntity).getStatus());
