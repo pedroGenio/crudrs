@@ -1,15 +1,14 @@
 package com.java.crud.enums;
 
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import jersey.repackaged.com.google.common.collect.Maps;
-
-import static com.fasterxml.jackson.annotation.JsonFormat.Shape.OBJECT;
+import org.glassfish.jersey.internal.guava.Maps;
 
 import java.util.Map;
+
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.OBJECT;
 
 /**
  * I tried to deserialize in many ways and didn't have success until now

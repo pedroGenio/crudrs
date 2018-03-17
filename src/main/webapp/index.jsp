@@ -11,6 +11,9 @@
     <title>$Title$</title>
   </head>
   <body>
-  $END$
+  <h2> This is a example of CRUD using REST api</h2>
+  <h3>Libraries such as JAS-RX AND Jackson</h3>
+  <h3>If you didn't run any sql, is highly recommend run project.sql</h3>
+  <a href="http://localhost:8080/crudrs/rest/project/projects">LIST ALL</a>
   </body>
 </html>

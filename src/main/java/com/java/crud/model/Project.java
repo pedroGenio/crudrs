@@ -1,13 +1,19 @@
 package com.java.crud.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Project extends Entity {
+/**
+ * Model for Project
+ */
+public class Project extends BaseEntity {
 
-    private Long version = new Long(0);
+    private Long version = 0L;
+    private Long versioning;
     private String name;
     private String description;
-    private String status;
+    private String status; // There is a CONSTRAINT at the database to check words, replacing ENUM
+
 //    @JsonDeserialize(using = StatusEnumDeserializer.class)
 //    private StatusEnum statusEnum;
 
@@ -15,9 +21,20 @@ public class Project extends Entity {
         return version;
     }
 
+    /**
+     * Version control, just one way to have this control
+     * Annotation for this attribute doesn't show up in JSON Object
+     * **It seems that it is not working correctly
+     * @return
+     */
     @JsonIgnore
     public Long getVersioning() {
-        return version++;
+        return version + 1;
+    }
+
+    @JsonProperty
+    public void setVersioning(Long versioning) {
+        this.versioning = versioning;
     }
 
     public void setVersion(Long version) {

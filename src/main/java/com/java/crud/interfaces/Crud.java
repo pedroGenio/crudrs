@@ -1,18 +1,21 @@
 package com.java.crud.interfaces;
 
-import com.java.crud.model.Entity;
+import com.java.crud.model.BaseEntity;
 
 import java.util.List;
 
+/**
+ * Interface where there are all main methods for Crud/DAO
+ */
 public interface Crud  {
 
-    Entity create(Entity entity) throws Exception;
+    BaseEntity create(BaseEntity baseEntity) throws Exception;
 
-    void update(Entity entity, Entity entityOld) throws Exception;
+    void update(BaseEntity baseEntity, BaseEntity baseEntityOld) throws Exception;
 
-    void delete(Entity entity) throws Exception;
+    void delete(BaseEntity baseEntity) throws Exception;
 
     List<?> readAll() throws Exception;
 
-    Entity findById(Integer id) throws Exception;
+    BaseEntity findById(Integer id) throws Exception;
 }

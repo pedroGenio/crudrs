@@ -2,6 +2,7 @@ package com.java.crud.service;
 
 import com.java.crud.dao.ProjectDao;
 import com.java.crud.model.Project;
+import com.java.crud.util.ConnectionUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -11,10 +12,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Service class for control of the operation and calling class DAO to communicate with the DB
+ */
 @Path("/project")
 public class ProjectService {
     final static Log logger = LogFactory.getLog(ProjectService.class);
@@ -23,48 +26,93 @@ public class ProjectService {
     UriInfo uriInfo;
     private ProjectDao dao = new ProjectDao();
 
+    /**
+     * @return
+     * @throws Exception
+     */
     @GET
     @Path("/projects")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Project> list() throws Exception {
+        List<Project> list;
+        try {
+            list = dao.readAll();
 
-        ProjectDao dao = new ProjectDao();
-        return dao.readAll();
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            return null;
+        } finally {
+            ConnectionUtil.getConnection().close();
+        }
+        return list;
     }
 
+    /**
+     * @param project
+     * @return
+     * @throws Exception
+     */
     @POST
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response create(Project project) {
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response create(Project project) throws Exception {
 
         try {
+            ConnectionUtil.getConnection().setAutoCommit(false);
+
             project = (Project) dao.create(project);
             String view = uriInfo.getPath() + "/" + project.getId();
             URI uri = new URI(view);
+
+            ConnectionUtil.getConnection().commit();
+
             return Response.created(uri).build();
+
         } catch (Exception e) {
-            e.printStackTrace();
+            ConnectionUtil.getConnection().rollback();
+
+            logger.error(e.getStackTrace());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } finally {
+            ConnectionUtil.autoCommitAndClose();
         }
-        return Response.serverError().build();
     }
 
+    /**
+     * @param id
+     * @param project
+     * @return
+     * @throws Exception
+     */
     @PUT
     @Path("/{id}")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response update(@PathParam("id") Integer id, Project project) throws Exception {
-
-        ProjectDao dao = new ProjectDao();
         try {
+            ConnectionUtil.getConnection().setAutoCommit(false);
             Project projectOld = (Project) dao.findById(id);
             dao.update(project, projectOld);
             String view = uriInfo.getPath() + "/" + project.getId();
             URI uri = new URI(view);
+
+            ConnectionUtil.getConnection().commit();
             return Response.created(uri).build();
         } catch (SQLException e) {
+            ConnectionUtil.getConnection().rollback();
             e.printStackTrace();
+            logger.error(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } finally {
+            ConnectionUtil.autoCommitAndClose();
         }
-        return Response.serverError().build();
     }
 
+    /**
+     * @param id
+     * @return
+     * @throws Exception
+     */
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -75,22 +123,49 @@ public class ProjectService {
             return Response.ok(project).build();
         } catch (SQLException e) {
             e.printStackTrace();
+            logger.error(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } finally {
+            ConnectionUtil.close();
         }
-        return Response.serverError().build();
     }
 
+    /**
+     * @param id
+     * @return
+     * @throws Exception
+     */
     @DELETE
     @Path("/{id}")
     public Response remove(@PathParam("id") Integer id) throws Exception {
-
         try {
+            ConnectionUtil.getConnection().setAutoCommit(false);
+
             Project project = (Project) dao.findById(id);
             dao.delete(project);
+            ConnectionUtil.getConnection().commit();
+
             return Response.noContent().build();
         } catch (SQLException e) {
-            e.printStackTrace();
+            ConnectionUtil.getConnection().rollback();
+
+            logger.error(e.getStackTrace());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        } finally {
+            ConnectionUtil.autoCommitAndClose();
         }
-        return Response.serverError().build();
     }
 
+    @GET
+
+    @Path("/testParam/{id}")
+    public String getTestParam(@PathParam("id") String id) {
+        return "id: " + id;
+    }
+
+    @GET
+    @Path("/testFixedPath")
+    public String getTestFixedPath() {
+        return "test Jersey";
+    }
 }

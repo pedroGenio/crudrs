@@ -1,17 +1,17 @@
 package com.java.crud.dao;
 
 import com.java.crud.interfaces.Crud;
-import com.java.crud.model.Entity;
-import com.java.crud.util.ConnectionFactory;
+import com.java.crud.model.BaseEntity;
+import com.java.crud.util.ConnectionUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.List;
 
+/**
+ * Abstract class to reuse methods
+ */
 public abstract class BaseDao implements Crud {
-
-
 
     public PreparedStatement getPreparedStatement(String sql) throws Exception {
         try {
@@ -21,29 +21,25 @@ public abstract class BaseDao implements Crud {
         }
     }
 
-    protected ResultSet query(String sql) throws Exception {
-        return ConnectionFactory.query(sql);
-    }
 
-
-    protected Connection getConnection() {
-        return ConnectionFactory.getConnection();
+    protected Connection getConnection() throws Exception {
+        return ConnectionUtil.getConnection();
     }
 
 
     @Override
-    public Entity create(Entity entity) throws Exception {
+    public BaseEntity create(BaseEntity baseEntity) throws Exception {
 
         return null;
     }
 
     @Override
-    public void update(Entity entity, Entity entityOld) throws Exception {
+    public void update(BaseEntity baseEntity, BaseEntity baseEntityOld) throws Exception {
 
     }
 
     @Override
-    public void delete(Entity entity) throws Exception {
+    public void delete(BaseEntity baseEntity) throws Exception {
 
     }
 
@@ -53,7 +49,7 @@ public abstract class BaseDao implements Crud {
     }
 
     @Override
-    public Entity findById(Integer id) throws Exception {
+    public BaseEntity findById(Integer id) throws Exception {
         return null;
     }
 }
