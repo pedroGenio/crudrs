@@ -22,6 +22,7 @@ public class ProjectDao extends BaseDao {
      * @param baseEntity
      * @return
      * @throws Exception
+     * @todo no increment sequence if sqlexception
      */
     @Override
     public BaseEntity create(BaseEntity baseEntity) throws Exception {
