@@ -8,6 +8,9 @@ import org.junit.Test;
 
 import javax.ws.rs.core.Application;
 
+/**
+ * Class created to try testing REST but didn't work as expected yet
+ */
 public class ProjectServiceTest extends JerseyTest {
 
     @Override

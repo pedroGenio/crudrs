@@ -157,7 +157,6 @@ public class ProjectService {
     }
 
     @GET
-
     @Path("/testParam/{id}")
     public String getTestParam(@PathParam("id") String id) {
         return "id: " + id;

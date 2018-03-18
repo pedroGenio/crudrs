@@ -35,8 +35,8 @@ public class ConnectionUtil {
         DataSource dataSource = ds;
         try {
             connection = dataSource.getConnection();
-////            Class.forName("org.postgresql.Driver");
-////            connection = DriverManager.getConnection(props.getProperty("db.url"), props.getProperty("db.user"), props.getProperty("db.passwd"));
+//            Class.forName("org.postgresql.Driver");
+//            connection = DriverManager.getConnection(props.getProperty("db.url"), props.getProperty("db.user"), props.getProperty("db.passwd"));
         } catch (SQLException e) {
             logger.error(e.getStackTrace());
             return null;
