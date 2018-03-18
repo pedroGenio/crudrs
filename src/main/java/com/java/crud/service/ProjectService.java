@@ -69,7 +69,7 @@ public class ProjectService {
 
             return Response.created(uri).build();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             ConnectionUtil.getConnection().rollback();
 
             logger.error(e.getStackTrace());
@@ -142,10 +142,15 @@ public class ProjectService {
             ConnectionUtil.getConnection().setAutoCommit(false);
 
             Project project = (Project) dao.findById(id);
-            dao.delete(project);
-            ConnectionUtil.getConnection().commit();
 
-            return Response.noContent().build();
+            // simple validation to check Project class
+            if (validatorProject(project)) {
+                dao.delete(project);
+                ConnectionUtil.getConnection().commit();
+                return Response.noContent().build();
+            }
+
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("The project doesn't exist").build();
         } catch (SQLException e) {
             ConnectionUtil.getConnection().rollback();
 
@@ -154,6 +159,13 @@ public class ProjectService {
         } finally {
             ConnectionUtil.autoCommitAndClose();
         }
+    }
+
+    private boolean validatorProject(Project project) {
+        if (project == null) {
+            return false;
+        }
+        return true;
     }
 
     @GET

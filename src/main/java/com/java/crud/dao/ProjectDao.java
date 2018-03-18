@@ -18,6 +18,7 @@ public class ProjectDao extends BaseDao {
     /**
      * Inserts data from JSON application
      * For createdBy, is using an example of ID for User
+     *
      * @param baseEntity
      * @return
      * @throws Exception
@@ -43,10 +44,10 @@ public class ProjectDao extends BaseDao {
             if (rs.next()) {
                 baseEntity.setId(rs.getInt("id")); // new id
             }
+            rs.close();
         } catch (SQLException e) {
             throw e;
         } finally {
-            rs.close();
             ps.close();
         }
 
@@ -57,7 +58,8 @@ public class ProjectDao extends BaseDao {
      * Update method and versioning column version
      * One way for versioning control
      * For updateAt, is using an example of id User
-     * @param baseEntity fields from JSON
+     *
+     * @param baseEntity    fields from JSON
      * @param baseEntityOld from findBy to use id and version for versioning control
      * @throws Exception
      */
@@ -97,13 +99,14 @@ public class ProjectDao extends BaseDao {
 
     /**
      * Finds one data by ID
+     *
      * @param id
      * @return
      * @throws Exception
      */
     @Override
     public BaseEntity findById(Integer id) throws Exception {
-        Project project = new Project();
+        Project project = null;
 
         String sql = "SELECT id, version, name, description, status, created_by, created_at, updated_by, updated_at FROM sch_crud.project WHERE id = ?";
         PreparedStatement ps = getPreparedStatement(sql);
@@ -115,7 +118,7 @@ public class ProjectDao extends BaseDao {
                 project = fillProject(rs);
             }
         } catch (SQLException e) {
-           throw e;
+            throw e;
         } finally {
             rs.close();
             ps.close();
@@ -127,6 +130,7 @@ public class ProjectDao extends BaseDao {
     /**
      * Remove data using ID and Version from findBy
      * One way for versioning control
+     *
      * @param baseEntity
      * @throws Exception
      */
